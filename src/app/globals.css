@@ -6,6 +6,9 @@
 
   --primary-dark: #344966;
   --primary-light: #dad2d8;
+
+  --secondary-red: #CC5A71;
+  --secondary-green: #86CB92;
 }
 
 @theme inline {
