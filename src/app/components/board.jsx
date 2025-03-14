@@ -4,13 +4,14 @@ import { useState, useEffect, useRef } from "react";
 
 const Board = () => {
 	const BOARD_SIZE = 10;
+	const SNAKE_SPEED = 75;
 	const boardRef = useRef(null);
 	const [board, setBoard] = useState(
 		new Array(BOARD_SIZE).fill(0).map((row) => new Array(BOARD_SIZE).fill(0))
 	);
 
 	const [moveVector, setMoveVector] = useState({ direction: "horizontal", amount: 1 });
-	const [snakeHead, setSnakeHead] = useState({ x: 4, y: 4 });
+	const [snake, setSnake] = useState([{ x: 4, y: 4 }, { x: 3, y: 4 }, { x: 2, y: 4 }]);
 
 	useEffect(() => {
 		boardRef.current.focus();
@@ -18,28 +19,56 @@ const Board = () => {
 		const interval = setInterval(() => {
 			boardRef.current.focus();
 			moveSnake();
-		}, 75);
+		}, SNAKE_SPEED);
 
 		return () => clearInterval(interval);
-	}, [snakeHead, moveVector]);
+	}, [snake, moveVector]);
 
 	const handleKeyDown = (event) => {
+
+		if ( moveVector.direction === "vertical") {
+			if ((event.key === "w" && moveVector.amount === 1) ||( event.key === "s" && moveVector.amount === -1)) return;
+		}
+		else if ( moveVector.direction === "horizontal") {
+			if ((event.key === "a" && moveVector.amount === 1) || (event.key === "d" && moveVector.amount === -1)) return;
+		}
 		const direction = event.key === "w" || event.key === "s" ? "vertical" : "horizontal";
 		const amount = event.key === "w" || event.key === "a" ? -1 : 1;
 
 		setMoveVector({ direction: direction, amount: amount });
+		moveSnake();
 	};
 
 	const moveSnake = () => {
-		setSnakeHead((prev) => {
+		setSnake((prev) => {
+			if (hitWall()) return prev;
 			if (moveVector.direction === "vertical") {
-                if (prev.y + moveVector.amount < BOARD_SIZE && prev.y + moveVector.amount >= 0 ) return{ x: prev.x, y: prev.y + moveVector.amount };
-				else return{ x: prev.x, y: prev.y };
+				let newSnake = [...prev];
+                let head = {...prev[0]}
+				head.y += moveVector.amount;
+				newSnake.unshift(head);
+				newSnake.pop();
+				return newSnake;
 			} else if (moveVector.direction === "horizontal") {
-                if (prev.x + moveVector.amount < BOARD_SIZE && prev.x + moveVector.amount >= 0 ) return{ x: prev.x + moveVector.amount, y: prev.y };
-				else return{ x: prev.x, y: prev.y };
+                let newSnake = [...prev];
+                let head = {...prev[0]}
+				head.x += moveVector.amount;
+				newSnake.unshift(head);
+				newSnake.pop();
+				return newSnake;
 			}
-		});
+		})
+	}
+
+	const hitWall = () => {
+		if ( moveVector.direction === "vertical") {
+			if ( snake[0].y + moveVector.amount >= BOARD_SIZE || snake[0].y + moveVector.amount < 0) return true;
+			else return false;
+		}
+		else if ( moveVector.direction === "horizontal") {
+			if ( snake[0].x + moveVector.amount >= BOARD_SIZE || snake[0].x + moveVector.amount < 0) return true;
+			else return false;
+		}
 	};
 
 	return (
@@ -60,7 +89,7 @@ const Board = () => {
 					{row.map((cell, cellIndex) => (
 						<div
 							className={`w-[50px] h-[50px] border border-white border-solid ${
-								rowIndex === snakeHead.y && cellIndex === snakeHead.x
+								snake.some(segment => segment.x === cellIndex && segment.y === rowIndex)
 									? "bg-(--secondary-green)"
 									: ""
 							}`}
