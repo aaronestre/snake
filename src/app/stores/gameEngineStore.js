@@ -1,4 +1,6 @@
 import { create } from "zustand";
+import { useSnakeStore } from "./snakeStore";
+
 
 export const useGameEngineStore = create((set, get) => ({
     gameStatus: "playing",
@@ -6,7 +8,10 @@ export const useGameEngineStore = create((set, get) => ({
 
     startGame: () => set({ gameStatus: "playing" }),
     endGame: () => set({ gameStatus: "ended" }),
-    resetGame: () => set({ gameStatus: "playing", score: 0 }),
+    resetGame: () => {
+        useSnakeStore.getState().resetSnake();
+        set({ gameStatus: "playing", score: 0 })
+    },
 
     increaseScore: () => set((state) => ({ score: state.score + 1 })),
 }));
