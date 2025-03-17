@@ -3,7 +3,7 @@ import { create } from "zustand";
 import { useSnakeStore } from "./snakeStore";
 
 export const useControlsStore = create((set, get) => ({
-    moveVector: { direction: "horizontal", amount: 1 },
+    moveVector: {  },
 
     handleKeyDown: (event) => {
         const moveSnake = useSnakeStore.getState().moveSnake;
