@@ -22,7 +22,7 @@ const Board = () => {
 
 		const interval = setInterval(() => {
 			boardRef.current.focus();
-			moveSnake(moveVector.direction, moveVector.amount);
+			moveSnake();
 		}, SNAKE_SPEED);
 
 		return () => clearInterval(interval);

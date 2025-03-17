@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { useFoodStore } from "./foodStore";
+import { useControlsStore } from "./controlsStore";
 
 export const useSnakeStore = create((set, get) => ({
 
@@ -9,10 +10,12 @@ export const useSnakeStore = create((set, get) => ({
         { x: 4, y: 4 },
     ],
 
-    moveSnake: async (moveDirection, moveAmount) => {
+    moveSnake: async () => {
+        const moveDirection = useControlsStore.getState().moveVector.direction;
+        const moveAmount = useControlsStore.getState().moveVector.amount;
+
         const isHittingWall = await get().hitWall(moveDirection, moveAmount);
         const food = useFoodStore.getState().food;
-
         if (isHittingWall) return;
         set((state) => {
             let newSnake = [...state.snake];
@@ -34,7 +37,9 @@ export const useSnakeStore = create((set, get) => ({
             return { snake: newSnake };
         });
     },
-    hitWall: (moveDirection, moveAmount) => {
+    hitWall: () => {
+        const moveDirection = useControlsStore.getState().moveVector.direction;
+        const moveAmount = useControlsStore.getState().moveVector.amount;
         const {snake, BOARD_SIZE} = get();
         const head = snake[0];
         if ( moveDirection === "vertical") {
@@ -46,5 +51,8 @@ export const useSnakeStore = create((set, get) => ({
 			else return false;
 		}
     },
-
+    hitSelf: () => {
+        const {snake} = get();
+        return snake.slice(1).some((pos) => pos.x === head.x && pos.y === head.y);
+    }
 }));
