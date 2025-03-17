@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { useFoodStore } from "./foodStore";
 
 export const useSnakeStore = create((set, get) => ({
 
@@ -6,14 +7,14 @@ export const useSnakeStore = create((set, get) => ({
 
     snake: [
         { x: 4, y: 4 },
-        { x: 3, y: 4 },
-        { x: 2, y: 4 },
     ],
 
     moveSnake: async (moveDirection, moveAmount) => {
         const isHittingWall = await get().hitWall(moveDirection, moveAmount);
+        const food = useFoodStore.getState().food;
+
+        if (isHittingWall) return;
         set((state) => {
-            if (isHittingWall) return state;
             let newSnake = [...state.snake];
             let head = { ...state.snake[0] };
             if (moveDirection === "vertical") {
@@ -22,7 +23,14 @@ export const useSnakeStore = create((set, get) => ({
                 head.x += moveAmount;
             }
             newSnake.unshift(head);
-            newSnake.pop();
+
+            if ( head.x === food.x && head.y === food.y) {
+                useFoodStore.getState().generateFood();
+            }
+            else {
+                newSnake.pop();
+            }
+
             return { snake: newSnake };
         });
     },
@@ -38,4 +46,5 @@ export const useSnakeStore = create((set, get) => ({
 			else return false;
 		}
     },
+
 }));
