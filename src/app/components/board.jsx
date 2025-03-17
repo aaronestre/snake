@@ -1,11 +1,13 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useRef } from "react";
 import { useBoardStore } from "../stores/boardStore";
 import { useControlsStore } from "../stores/controlsStore";
 import { useSnakeStore } from "../stores/snakeStore";
 import { useFoodStore } from "../stores/foodStore";
 import { useGameManager } from "../hooks/useGameManager";
+
+import BoardCell from "./boardCell";
 
 const Board = () => {
 
@@ -37,21 +39,12 @@ const Board = () => {
 					key={rowIndex}
 				>
 					{row.map((cell, cellIndex) => (
-						<div
-							className={`w-[50px] h-[50px] border border-white border-solid 
-                                ${ snake.some(segment => segment.x === cellIndex && segment.y === rowIndex)
-									? "bg-(--secondary-green)"
-									: ""
-							    }
-                                ${ food.x === cellIndex && food.y === rowIndex
-                                    ? "bg-red-500"
-                                    : ""
-                                }
-
-                            `}
-							key={cellIndex}
-							coords={`x: ${rowIndex}, y: ${cellIndex}`}
-						></div>
+						<BoardCell
+                            key={cellIndex}
+                            position={{ x: cellIndex, y: rowIndex }}
+                            isSnake={snake.some((pos) => pos.x === cellIndex && pos.y === rowIndex)}
+                            isFood={food.x === cellIndex && food.y === rowIndex}
+                        />
 					))}
 				</div>
 			))}
