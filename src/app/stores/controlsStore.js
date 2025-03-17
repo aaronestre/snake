@@ -1,9 +1,12 @@
 import { create } from "zustand";
 
+import { useSnakeStore } from "./snakeStore";
+
 export const useControlsStore = create((set, get) => ({
     moveVector: { direction: "horizontal", amount: 1 },
 
-    handleKeyDown: (event, moveSnake) => {
+    handleKeyDown: (event) => {
+        const moveSnake = useSnakeStore.getState().moveSnake;
         const {moveVector} = get();
         if ( moveVector.direction === "vertical") {
 			if ((event.key === "w" && moveVector.amount === 1) ||( event.key === "s" && moveVector.amount === -1)) return;
