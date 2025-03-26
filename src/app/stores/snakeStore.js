@@ -32,6 +32,8 @@ export const useSnakeStore = create((set, get) => ({
 
 			if (head.x === food.x && head.y === food.y) {
 				useFoodStore.getState().generateFood();
+                useGameEngineStore.getState().increaseScore();
+
 			} else {
 				newSnake.pop();
 			}

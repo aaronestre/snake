@@ -6,6 +6,7 @@ import { useControlsStore } from "../stores/controlsStore";
 import { useSnakeStore } from "../stores/snakeStore";
 import { useFoodStore } from "../stores/foodStore";
 import { useGameManager } from "../hooks/useGameManager";
+import { useGameEngineStore } from "../stores/gameEngineStore";
 
 import BoardCell from "./boardCell";
 
@@ -30,8 +31,8 @@ const Board = () => {
 			onKeyDown={handleMovement}
 			tabIndex={-1}
 		>
-			<p className="text-white">
-				
+			<p className="text-white mx-auto">
+				Score: {useGameEngineStore.getState().score}
 			</p>
 			{board.map((row, rowIndex) => (
 				<div
