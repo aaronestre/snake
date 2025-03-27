@@ -9,7 +9,7 @@ export const useGameEngineStore = create((set, get) => ({
     startGame: () => set({ gameStatus: "playing" }),
     endGame: () => set({ gameStatus: "ended" }),
     resetGame: () => {
-        useSnakeStore.getState().resetSnake();
+        useSnakeStore.getState().initializeSnake();
         set({ gameStatus: "playing", score: 0 })
     },
 

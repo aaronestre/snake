@@ -21,7 +21,6 @@ const Board = () => {
 	const handleMovement = (event) => {
 		handleKeyDown(event);
 	}
-
     useGameManager();
 
 	return (
