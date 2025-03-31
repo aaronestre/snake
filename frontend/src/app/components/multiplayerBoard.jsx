@@ -2,26 +2,26 @@
 
 import { useRef } from "react";
 import { useBoardStore } from "../stores/boardStore";
-import { useControlsStore } from "../stores/controlsStore";
-import { useSnakeStore } from "../stores/snakeStore";
 import { useFoodStore } from "../stores/foodStore";
-import { useGameManager } from "../hooks/useGameManager";
-import { useGameEngineStore } from "../stores/gameEngineStore";
+import { useMultiplayerGameEngineStore } from "../stores/multiplayerGameEngineStore";
+import { useMultiplayerGameManager } from "../hooks/useMultiplayerGameManager";
+import { useMultiplayerSnakeStore } from "../stores/multiplayerSnakeStore";
+import { useMultiplayerControlsStore } from "../stores/multiplayerControlStore";
 
 import BoardCell from "./boardCell";
 
 const Board = () => {
 
     const food = useFoodStore((state) => state.food);
-    const snake = useSnakeStore((state) => state.snake);
+    const snake = useMultiplayerSnakeStore((state) => state.snake);
 
 	const boardRef = useRef(null);
 	const board = useBoardStore((state) => state.board);
-	const handleKeyDown = useControlsStore((state) => state.handleKeyDown);
+	const handleKeyDown = useMultiplayerControlsStore((state) => state.handleKeyDown);
 	const handleMovement = (event) => {
 		handleKeyDown(event);
 	}
-    useGameManager();
+    useMultiplayerGameManager();
 
 	return (
 		<div
@@ -31,7 +31,7 @@ const Board = () => {
 			tabIndex={-1}
 		>
 			<p className="text-white mx-auto">
-				Score: {useGameEngineStore.getState().score}
+				Score: {useMultiplayerGameEngineStore.getState().score}
 			</p>
 			{board.map((row, rowIndex) => (
 				<div
