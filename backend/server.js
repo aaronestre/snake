@@ -13,14 +13,16 @@ const io = socketio(expressServer, {
 	}
 });
 
+const snakes = {};
 
 io.on("connection", (socket) => {
-	console.log("New client connected");
-});
+	console.log(`New client connected: ${socket.id}`);
 
 
+    socket.on("disconnect", () => {
+        console.log("Client disconnected");
+        delete snakes[socket.id];
+    });
 
 
-app.get("/", (req, res) => {
-	res.send("Hello World");
 });
