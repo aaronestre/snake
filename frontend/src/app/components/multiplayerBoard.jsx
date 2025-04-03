@@ -7,10 +7,12 @@ import { useMultiplayerGameEngineStore } from "../stores/multiplayerGameEngineSt
 import { useMultiplayerGameManager } from "../hooks/useMultiplayerGameManager";
 import { useMultiplayerSnakeStore } from "../stores/multiplayerSnakeStore";
 import { useMultiplayerControlsStore } from "../stores/multiplayerControlStore";
-
 import BoardCell from "./boardCell";
 
-const Board = () => {
+import { io } from "socket.io-client";
+import { useEffect } from "react";
+
+const MultiplayerBoard = () => {
 
     const food = useFoodStore((state) => state.food);
     const snake = useMultiplayerSnakeStore((state) => state.snake);
@@ -22,6 +24,28 @@ const Board = () => {
 		handleKeyDown(event);
 	}
     useMultiplayerGameManager();
+
+    useEffect(() => {
+        const socket = io("http://localhost:4000");
+        socket.on("connect", () => {
+            console.log("Connected to server");
+            socket.emit("message", "Hello from client!");
+        });
+        
+        socket.on("disconnect", () => {
+            console.log("Disconnected from server");
+        });
+
+        socket.on("updateSnakes", (data) => {
+            console.log("Received updateSnakes event:", data);
+        });
+
+        return () => {
+            socket.disconnect();
+        };
+
+    }, []);
+
 
 	return (
 		<div
@@ -52,4 +76,4 @@ const Board = () => {
 	);
 };
 
-export default Board;
+export default MultiplayerBoard;

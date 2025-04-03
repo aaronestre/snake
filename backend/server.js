@@ -24,5 +24,8 @@ io.on("connection", (socket) => {
         delete snakes[socket.id];
     });
 
+    setInterval(() => {
+        socket.emit("updateSnakes", "testSnakes" );
+    }, 1000);
 
 });

@@ -4,10 +4,10 @@ import { useMultiplayerSnakeStore } from "../stores/multiplayerSnakeStore";
 import { useGameEngineStore } from "../stores/gameEngineStore";
 
 export const useMultiplayerGameManager  = (speed = 75) => {
-    const moveSnake = useSnakeStore((state) => state.moveSnake);
+    const moveSnake = useMultiplayerSnakeStore((state) => state.moveSnake);
     const gameStatus = useGameEngineStore((state) => state.gameStatus);
 
-    const initialize = useSnakeStore((state) => state.initializeSnake);
+    const initialize = useMultiplayerSnakeStore((state) => state.initializeSnake);
 
     useEffect(() => {
         if (gameStatus === "playing") {
